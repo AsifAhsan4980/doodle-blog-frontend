@@ -8,7 +8,9 @@ import Form from "./children/form"
 
 
 
-const AddBlog = () => {
+const AddBlog = (props: {flag: any, state: any}) => {
+
+
     const [open, setOpen] = React.useState(false);
 
 
@@ -36,7 +38,7 @@ const AddBlog = () => {
             >
                 <DialogTitle>Add new blog</DialogTitle>
                 <DialogContent>
-                    <Form/>
+                    <Form flag={props.flag} state={props.state}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>

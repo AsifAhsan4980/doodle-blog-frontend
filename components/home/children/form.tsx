@@ -4,7 +4,7 @@ import React from "react";
 import blog from "../../../api/blog"
 
 
-const Form = () => {
+const Form = (props: {flag: any, state: boolean}) => {
 
     const { register, control, handleSubmit, reset, watch } = useForm();
 
@@ -21,7 +21,7 @@ const Form = () => {
 
     const onSubmit = (data : any) => {
         blog.postBlog(data).then((res: { data: any; }) => {
-            console.log(res.data)
+            props.flag(!props.state)
             reset()
         })
     };

@@ -1,17 +1,36 @@
-import {JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, SetStateAction, useState} from "react";
+import {
+    JSXElementConstructor,
+    Key,
+    ReactElement,
+    ReactFragment,
+    ReactPortal,
+    SetStateAction,
+    useEffect,
+    useState
+} from "react";
 import {Container, Paper, Typography, Box} from "@mui/material";
 import Link from "next/link"
 import Pagination from '@mui/material/Pagination';
 import usePagination from "../../utils/pagination";
+import blog from "../../api/blog";
 
 const AllBlog = (props: any) => {
 
-    const [blogs, setBlogs] = useState(props.data.blogs)
+    const d = props.data.blogs.reverse()
+
+    const [blogs, setBlogs] = useState([...d])
+    useEffect(()=>{
+       blog.getBlog().then(r => {
+           console.log('s',r.data)
+           setBlogs(r.data.reverse())
+       })
+    },[props.state])
     let [page, setPage] = useState(1);
     const PER_PAGE = 10;
 
     const count = Math.ceil(blogs.length / PER_PAGE);
     const _DATA : any  = usePagination(blogs, PER_PAGE);
+
 
     const handleChange = (e: any, p: SetStateAction<number>) => {
         setPage(p);
