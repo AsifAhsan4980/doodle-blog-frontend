@@ -1,1 +1,0 @@
-export const api = 'https://backend-blog-asif.herokuapp.com/'
