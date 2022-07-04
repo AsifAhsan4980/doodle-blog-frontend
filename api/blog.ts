@@ -41,10 +41,13 @@ const addComment = (data: any, id: any) => {
     })
 }
 
-export default {
+const blog = {
     postBlog,
     getBlog,
     getOneBlog,
     updateBlog,
     addComment
 }
+
+
+export default blog

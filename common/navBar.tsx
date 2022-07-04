@@ -12,13 +12,27 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import Link from 'next/link'
+import {AuthContext, checkJwt} from "../pages/_app";
+import {useContext, useEffect, useState} from "react";
 import {isAuthenticated} from "../utils/auth";
+// import {isAuthenticated} from "../utils/auth";
 
-const pages = ['My Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const ResponsiveAppBar = (data: any) => {
-    console.log(data)
+const pages = [''];
+const settings = [ 'Account', 'Dashboard'];
+
+const ResponsiveAppBar = () => {
+
+    const { dispatch }: any = useContext(AuthContext);
+    const data = useContext(AuthContext);
+
+    const [authInfo, setAuthInfo] = useState(false)
+
+    useEffect(()=> {
+        isAuthenticated().then(r => setAuthInfo(r))
+    }, [dispatch])
+
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -38,15 +52,15 @@ const ResponsiveAppBar = (data: any) => {
     };
 
     const userDropDown = () => {
-        return(
-            <Box sx={{ flexGrow: 0 }}>
+        return (
+            <Box sx={{flexGrow: 0}}>
                 <Tooltip title="Open settings">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                        <Avatar alt="Remy Sharp" />
                     </IconButton>
                 </Tooltip>
                 <Menu
-                    sx={{ mt: '45px' }}
+                    sx={{mt: '45px'}}
                     id="menu-appbar"
                     anchorEl={anchorElUser}
                     anchorOrigin={{
@@ -66,6 +80,21 @@ const ResponsiveAppBar = (data: any) => {
                             <Typography textAlign="center">{setting}</Typography>
                         </MenuItem>
                     ))}
+                    <MenuItem onClick={handleCloseUserMenu}>
+                        <Link  href={`/user/profile/${data.state.id}`}>
+                            <Typography textAlign="center">Profile</Typography>
+                        </Link>
+
+                    </MenuItem>
+                    <MenuItem onClick={handleCloseUserMenu}>
+
+                        <Typography textAlign="center"    onClick={() => {
+                            dispatch({
+                                type: "LOGOUT",
+                            });
+                            // scrollToTop();
+                        }}>Logout</Typography>
+                    </MenuItem>
                 </Menu>
             </Box>
         )
@@ -73,7 +102,29 @@ const ResponsiveAppBar = (data: any) => {
 
     const noUser = () => {
         return (
-            <Button>Log In / Signup</Button>
+            <Box>
+                <Link href="/login">
+                    <Button size="small"
+                            variant="text"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            color="inherit"
+                            sx={{mr: 2}}>
+                        Log In
+                    </Button>
+                </Link>
+                <Link href={"/signup"}>
+                    <Button size="small"
+                            variant="text"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            color="inherit">
+                        Signup
+                    </Button>
+                </Link>
+            </Box>
         )
     }
 
@@ -81,7 +132,7 @@ const ResponsiveAppBar = (data: any) => {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
                     <Typography
                         variant="h6"
                         noWrap
@@ -89,7 +140,7 @@ const ResponsiveAppBar = (data: any) => {
                         href="/"
                         sx={{
                             mr: 2,
-                            display: { xs: 'none', md: 'flex' },
+                            display: {xs: 'none', md: 'flex'},
                             fontFamily: 'monospace',
                             fontWeight: 700,
                             letterSpacing: '.3rem',
@@ -100,7 +151,7 @@ const ResponsiveAppBar = (data: any) => {
                         LOGO
                     </Typography>
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -109,7 +160,7 @@ const ResponsiveAppBar = (data: any) => {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon />
+                            <MenuIcon/>
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -126,7 +177,7 @@ const ResponsiveAppBar = (data: any) => {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
-                                display: { xs: 'block', md: 'none' },
+                                display: {xs: 'block', md: 'none'},
                             }}
                         >
                             {pages.map((page) => (
@@ -136,7 +187,7 @@ const ResponsiveAppBar = (data: any) => {
                             ))}
                         </Menu>
                     </Box>
-                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                    <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
                     <Typography
                         variant="h5"
                         noWrap
@@ -144,7 +195,7 @@ const ResponsiveAppBar = (data: any) => {
                         href=""
                         sx={{
                             mr: 2,
-                            display: { xs: 'flex', md: 'none' },
+                            display: {xs: 'flex', md: 'none'},
                             flexGrow: 1,
                             fontFamily: 'monospace',
                             fontWeight: 700,
@@ -155,12 +206,12 @@ const ResponsiveAppBar = (data: any) => {
                     >
                         LOGO
                     </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                sx={{my: 2, color: 'white', display: 'block'}}
                             >
                                 {page}
                             </Button>
@@ -168,7 +219,7 @@ const ResponsiveAppBar = (data: any) => {
                     </Box>
 
                     {
-                        isAuthenticated() ? userDropDown() : noUser()
+                        authInfo ? userDropDown() : noUser()
                     }
                 </Toolbar>
             </Container>
